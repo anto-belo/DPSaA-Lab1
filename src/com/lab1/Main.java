@@ -1,50 +1,66 @@
 package com.lab1;
 
-public class Main {
+import com.lab1.Polynomial.Node;
 
-    private static Polynomial polynomial;
+public class Main {
 
     public static void main(String[] args) {
 
-        polynomial = new Polynomial();
+        Polynomial p = new Polynomial("-5x^4+7x^3-4x^2+6x+7");
+        Polynomial q = new Polynomial("6x^6+5x^4+x^2-3x+4");
+        System.out.println(equality(p, q));
 
-        String polynomial_1 = "-5x^4+7x^3-4x^2+6x+7";
-        fillPolynomial(polynomial, getMembersArray(polynomial_1));
+        q = new Polynomial("-5x^4+7x^3-4x^2+6x+7");
+        System.out.println(equality(p, q));
+
+        System.out.println(meaning(q, 2));
+
+        /*Polynomial s = new Polynomial();
+        add(s, new Polynomial("5x^6+3x^3-2x+4"), new Polynomial("7x^8-6x^6+4x^4-x"));
+        s.printPolynomial();*/
     }
 
-    private static void fillPolynomial(Polynomial p, String[] members) {
-        for (String member : members) {
-            String[] memParts = member.split("\\^");
-            String basis = memParts[0];
-            int degree;
-
-            if (memParts.length != 1) {
-                degree = Integer.parseInt(memParts[1]);
-            } else degree = 0;
-
-            if (!String.valueOf(basis.charAt(basis.length() - 1)).matches("[0-9]")) {
-                basis = basis.substring(0, basis.length() - 1);
-                degree = (memParts.length != 1) ? degree : 1;
-            }
-
-            p.add(Integer.parseInt(basis), degree);
+    private static boolean equality(Polynomial p, Polynomial q) {
+        if (p.size() != q.size()) return false;
+        for (int i = 0; i < p.size(); i++) {
+            Node polyP = p.node(i);
+            Node polyQ = q.node(i);
+            if (polyP.coefficient != polyQ.coefficient ||
+                    polyP.exponent != polyQ.exponent)
+                return false;
         }
+        return true;
     }
 
-    private static String[] getMembersArray(String polynomial) {
-        StringBuilder members = new StringBuilder();
-        int offset = 0;
-        for (int i = 1; i < polynomial.length(); i++) {
-            if (polynomial.charAt(i) == '+') {
-                members.append(polynomial, offset, i).append("|");
-                offset = i + 1;
-            } else if (polynomial.charAt(i) == '-') {
-                members.append(polynomial, offset, i).append("|");
-                offset = i;
-            } else if (i == polynomial.length() - 1) {
-                members.append(polynomial, offset, i + 1);
+    private static int meaning(Polynomial p, int x) {
+        int res = 0;
+        for (int i = 0; i < p.size(); i++) {
+            Node n = p.node(i);
+            res += n.coefficient * Math.pow(x, n.exponent);
+        }
+        return res;
+    }
+
+    // UNDER CONSTRUCTION UNDER CONSTRUCTION UNDER CONSTRUCTION UNDER CONSTRUCTION
+    
+    /*private static void add(Polynomial p, Polynomial q, Polynomial r) {
+        Polynomial b = q;
+        Polynomial s = r;
+        if (Math.min(q.size(), r.size()) == q.size()) {
+            b = r;
+            s = q;
+        }
+
+        for (int i = 0; i < s.size(); i++) {
+            Node in = s.node(i);
+            for (int j = 0; j < b.size(); j++) {
+                Node form = b.node(i);
+                if (form.exponent == in.exponent)
+                    p.add(form.coefficient + in.coefficient, in.exponent);
+                else if (in.exponent > form.exponent)
+                    p.add(in.coefficient, in.exponent);
+                else p.add(form.coefficient, form.exponent);
             }
         }
-        return members.toString().split("\\|");
-    }
+    }*/
 }
