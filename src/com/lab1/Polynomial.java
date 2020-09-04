@@ -64,8 +64,15 @@ public class Polynomial {
 
     void printList() {
         if (size == 0) return;
-        for (int i = 0; i < size; i++)
-            System.out.print(node(i).basis + "x ^ " + node(i).degree + " ");
+        for (int i = 0; i < size; i++) {
+            Node cur = node(i);
+            if (cur.basis > 0) System.out.print("+");
+            if (cur.degree == 1)
+                System.out.print(node(i).basis + "x");
+            else if (cur.degree != 0)
+                System.out.print(node(i).basis + "x^" + node(i).degree);
+            else System.out.print(node(i).basis);
+        }
         System.out.println();
     }
 
