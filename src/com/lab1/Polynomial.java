@@ -2,7 +2,7 @@ package com.lab1;
 
 public class Polynomial {
 
-    private Node first;
+    private final Node first;
     private int size;
 
     Polynomial() {
@@ -64,43 +64,11 @@ public class Polynomial {
         size++;
     }
 
-    void set(int basis, int degree, int index) {
-        node(index).coefficient = basis;
-        node(index).exponent = degree;
-    }
-
     Node node(int index) {
         Node x = first.next;
         for (int i = 0; i < index; i++)
             x = x.next;
         return x;
-    }
-
-    void delete(int index) {
-        Node x = node(index);
-        if (index == 0) {
-            first.next = x.next;
-            size--;
-            return;
-        }
-
-        Node prev = node(index - 1);
-
-        prev.next = x.next;
-        size--;
-    }
-
-    void clear() {
-        Node x = first.next;
-        while (x != null) {
-            Node next = x.next;
-            x.next = null;
-            x.coefficient = 0;
-            x.exponent = 0;
-            x = next;
-        }
-        first = new Node(0,0,null);
-        size = 0;
     }
 
     int size() {
@@ -119,9 +87,9 @@ public class Polynomial {
                 else System.out.print("x");
             }
             else if (cur.exponent != 0) {
-                if (cur.coefficient != 1)
-                    System.out.print(node(i).coefficient + "x^" + node(i).exponent);
-                else System.out.print("x^" + node(i).exponent);
+                if (cur.coefficient == 1) System.out.print("x^" + node(i).exponent);
+                else if (cur.coefficient == -1) System.out.print("-x^" + node(i).exponent);
+                else System.out.print(node(i).coefficient + "x^" + node(i).exponent);
             } else System.out.print(node(i).coefficient);
         }
         System.out.println();
