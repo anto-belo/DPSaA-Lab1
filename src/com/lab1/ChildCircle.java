@@ -2,7 +2,7 @@ package com.lab1;
 
 public class ChildCircle {
 
-    private Node start;
+    private final Node start;
     private int size;
 
     ChildCircle(int children) {
@@ -23,8 +23,11 @@ public class ChildCircle {
         size++;
     }
 
-    int get(int index) {
-        return node(index).e;
+    int move(int from, int count) {
+        Node cur = node(from);
+        for (int i = 0; i < count; i++)
+            cur = cur.next;
+        return indexOf(cur);
     }
 
     Node node(int index) {
@@ -38,15 +41,17 @@ public class ChildCircle {
         Node x = node(index);
         Node next = x.next;
 
-        if (index == 0) {
+        if (index == 0 || index % size == 0) {
             Node last = node(size - 1);
             last.next = start.next.next;
             start.next = start.next.next;
+            size--;
             return;
         }
 
         if (size == 1) {
             start.next = null;
+            size--;
             return;
         }
 
@@ -55,26 +60,14 @@ public class ChildCircle {
         size--;
     }
 
-    void clear() {
-        Node x = start.next;
-        for (int i = 0; i < size; i++) {
-            Node next = x.next;
-            x.next = null;
-            x.e = 0;
-            x = next;
-        }
-        start = new Node(0, null);
-        size = 0;
-    }
-
     int size() {
         return size;
     }
 
-    int indexOf(int e) {
+    int indexOf(Node n) {
         Node x = start.next;
         for (int i = 0; i < size; i++) {
-            if (e == x.e) return i;
+            if (n == x) return i;
             x = x.next;
         }
         return -1;
